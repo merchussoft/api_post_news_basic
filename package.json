@@ -2,9 +2,9 @@
   "name": "api_post_news_basic",
   "version": "1.0.0",
   "description": "",
-  "main": "src/index.js",
+  "main": "www",
   "scripts": {
-    "start": "node src/index.js"
+    "start": "node www"
   },
   "keywords": [],
   "author": "",

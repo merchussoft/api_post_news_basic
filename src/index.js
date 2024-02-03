@@ -9,4 +9,4 @@ app.get('/', (req, res)=>{
     res.send('hola mundo');
 })
 
-app.listen(app.get('port'), () => console.log(`SERVER RUNNING IN PORT ${app.get('port')}`))
+module.exports = app;
