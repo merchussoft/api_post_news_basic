@@ -21,6 +21,6 @@ app.use(cors());
 
 
 // import routers
-app.use(require('./app/routers/default'));
+app.use('/api/news', require('./app/routers/default'));
 
 module.exports = app;

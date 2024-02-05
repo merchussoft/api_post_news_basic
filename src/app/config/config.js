@@ -30,11 +30,17 @@ function MysqlConfig(){
 }
 
 
+function validarTipoDato(valor) {
+    return (typeof valor === 'number') ? Number(valor) : valor;
+}
+
+
 module.exports = {
     getEnvironment,
     getNumberEnv,
     nodeEnv,
     createPathEnv,
-    MysqlConfig
+    MysqlConfig,
+    validarTipoDato
 }
 
