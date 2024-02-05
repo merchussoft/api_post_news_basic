@@ -25,7 +25,9 @@ function MysqlConfig(){
         user: getEnvironment('DB_USER'),
         password: getEnvironment('DB_PASS'),
         database: getEnvironment('DB_NAME'),
-        port: getNumberEnv('DB_PORT')
+        port: getNumberEnv('DB_PORT'),
+        timezone: 'Europe/Madrid',
+        charset: 'utf8mb4'
     }
 }
 

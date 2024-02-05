@@ -11,6 +11,13 @@ conn.connect((err) => {
 
 function resultPromise(sql, data = []) {
     return new Promise((resolve, reject) => {
+        // Configurar el idioma de la sesión
+        conn.query('SET lc_time_names = "es_ES"', (err) => {
+            if (err) {
+                console.error('Error al configurar el idioma de la sesión:', err);
+                return;
+            }
+        })
         const data_mysql = conn.query(sql, data, (err, rows) => {
             try {
                 let data_result = {code: 200, data: rows, message: ''};
@@ -29,10 +36,11 @@ async function obtieneDatos(data) {
     let adicional = ('str_adicional' in data) ? data.str_adicional : '';
     let campo = ('campo' in data) ? validarTipoDato(data.campo) : 1;
     let valor = ('valor' in data) ? validarTipoDato(data.valor) : 1;
-    let sql = `SELECT ${campos} FROM ${data.table} WHERE ${campo}=${valor} ${adicional}`;
+    let sql = `SELECT ${campos}
+               FROM ${data.table}
+               WHERE ${campo} = ${valor} ${adicional}`;
     return await resultPromise(sql);
 }
-
 
 
 module.exports = {

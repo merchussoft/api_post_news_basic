@@ -3,7 +3,7 @@ const cfg = require ('../config/config');
 
 
 exports.listarAllNoticias = async () =>{
-    let sql = 'SELECT cod_news, title, description, content, ne.created_at, ubicacion as url_img '
+    let sql = 'SELECT cod_news, title, description, content, DATE_FORMAT(ne.created_at, "%e %M, %Y") as created_at , ubicacion as url_img '
     sql += `FROM ${cfg.getEnvironment('DB_CLIENT')}.news ne `
     sql += `LEFT JOIN ${cfg.getEnvironment('DB_CLIENT')}.adjuntos ad ON ad.relacion = ne.cod_news`;
     return await db.resultPromise(sql)
