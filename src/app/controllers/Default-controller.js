@@ -18,3 +18,8 @@ exports.obtenerImagen = async (req, res) => {
         res.status(404).send('Imagen no encontrada.');
     }
 }
+
+exports.insertNews = async (req, res) => {
+    const {data, code} = await dfmodel.insertNews(req.body);
+    res.status(code).json({cod_insert: data});
+}

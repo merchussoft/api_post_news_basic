@@ -17,3 +17,7 @@ exports.obtenerImagen = async (cod_adjunto) =>{
         "valor": cod_adjunto
     })
 }
+
+exports.insertNews = async (data) =>{
+    return await db.insertTable(`${cfg.getEnvironment('DB_CLIENT')}.news`, data)
+}

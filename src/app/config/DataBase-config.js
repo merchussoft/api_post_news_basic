@@ -42,8 +42,20 @@ async function obtieneDatos(data) {
     return await resultPromise(sql);
 }
 
+async function insertTable(table, data= {}) {
+    let campos = Object.keys(data).toString();
+    let values_insert = [];
+    for(let i = 0; i < Object.keys(data).length; i ++) values_insert.push('?');
+    let sql_insert = `INSERT INTO ${table}(${campos})VALUES(${values_insert.toString()})`;
+    let result_insert = await resultPromise(sql_insert, Object.values(data))
+    let error_data = {code: result_insert.code, 'data': result_insert.data.insertId};
+    if(result_insert.code === 406 ) error_data = result_insert;
+    return error_data;
+}
+
 
 module.exports = {
     resultPromise,
-    obtieneDatos
+    obtieneDatos,
+    insertTable
 }
