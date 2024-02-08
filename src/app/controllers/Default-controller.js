@@ -23,3 +23,9 @@ exports.insertNews = async (req, res) => {
     const {data, code} = await dfmodel.insertNews(req.body);
     res.status(code).json({cod_insert: data});
 }
+
+
+exports.detailPost = async (req, res) => {
+    const {data, code} = await dfmodel.detailPost(Number(req.params.cod_post));
+    res.status(code).json(data);
+}
