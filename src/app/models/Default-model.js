@@ -29,3 +29,7 @@ exports.detailPost = async (cod_adjunto) =>{
     sql += `WHERE 1=1 AND ne.cod_news = ?`;
     return await db.resultPromise(sql, [cod_adjunto])
 }
+
+exports.insertAdjuntos = async (data = {})  => {
+    return await db.insertTable(`${cfg.getEnvironment('DB_CLIENT')}.adjuntos`, data)
+}

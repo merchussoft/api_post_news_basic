@@ -1,5 +1,6 @@
 const dfmodel = require('../models/Default-model');
 const cfg = require('../config/config');
+const {minioSave} = require('../config/minio-serve');
 
 exports.listarNoticias = async (req, res) => {
     res.json(await dfmodel.listarAllNoticias());
@@ -21,7 +22,21 @@ exports.obtenerImagen = async (req, res) => {
 
 exports.insertNews = async (req, res) => {
     const {data, code} = await dfmodel.insertNews(req.body);
-    res.status(code).json({cod_insert: data});
+    if (code === 200) {
+        const data_minio = await minioSave(req.file);
+
+        if (data_minio.code === 200) {
+            const data_insert = data_minio.data;
+            data_insert.relacion = data;
+            await dfmodel.insertAdjuntos(data_insert)
+            res.status(data_minio.code).json({message: 'data guardada existosamente'});
+        } else {
+            res.status(code).json({message: 'data guardada existosamente sin una imagen'});
+        }
+
+    } else {
+        res.status(code).json({message: 'Validar la data del formulario'});
+    }
 }
 
 
