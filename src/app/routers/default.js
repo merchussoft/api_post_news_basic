@@ -6,6 +6,7 @@ route.get('/', dfci.listarNoticias);
 route.get('/pruebasavenews/:cod', dfci.obtenerImagen);
 route.post('/savenews', upload.single('imagen'), dfci.insertNews);
 route.get('/detailspost/:cod_post', dfci.detailPost);
+route.post('/upload_to_minio', upload.single('file_minio'), dfci.uploadToMinio);
 
 
 

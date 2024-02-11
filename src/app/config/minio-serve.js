@@ -1,30 +1,25 @@
 const Minio = require('minio');
 const cfg = require('./config');
-const fs = require('fs');
+
+const minioClient = new Minio.Client({
+    endPoint: cfg.getEnvironment('ENDPOINT'),
+    port: 9000, // Puerto predeterminado de Minio
+    useSSL: false, // Cambia a true si estás usando SSL
+    accessKey: cfg.getEnvironment('USER_MINIO'), //'tu-usuario'
+    secretKey: cfg.getEnvironment('SECRET_KEY'), // 'tu-password'
+});
+
 
 
 exports.minioSave = async (file) => {
-    console.log(file)
     if (file) {
         try {
-            const minioClient = new Minio.Client({
-                endPoint: cfg.getEnvironment('ENDPOINT'),
-                port: 9000, // Puerto predeterminado de Minio
-                useSSL: false, // Cambia a true si estás usando SSL
-                accessKey: cfg.getEnvironment('USER_MINIO'), //'tu-usuario'
-                secretKey: cfg.getEnvironment('SECRET_KEY'), // 'tu-password'
-            });
-
             const metaData = {
                 'Content-Type': file.mimetype,
                 'X-Amz-Meta-Testing': 1234,
             };
 
-            const {
-                etag,
-                err
-            } = await minioClient.fPutObject(cfg.getEnvironment('BUCKET_MINIO'), file.originalname, file.path, metaData);
-            fs.unlinkSync(file.path);
+            const {etag, err} = await minioClient.putObject(cfg.getEnvironment('BUCKET_MINIO'), file.originalname, file.buffer, metaData);
             return err ? {code: 403, data: {}} : {
                 code: 200,
                 data: {
@@ -41,5 +36,4 @@ exports.minioSave = async (file) => {
     } else {
         return {code: 403, data: {}}
     }
-
 }
