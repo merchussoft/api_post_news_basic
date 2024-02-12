@@ -44,3 +44,9 @@ exports.detailPost = async (req, res) => {
     const {data, code} = await dfmodel.detailPost(Number(req.params.cod_post));
     res.status(code).json(data);
 }
+
+
+exports.uploadToMinio = async (req, res) => {
+    const data_minio = await minioSave(req.file);
+    res.status(data_minio.code).json(data_minio.data.ubicacion);
+}
