@@ -1,13 +1,14 @@
 const dfmodel = require('../models/Default-model');
 const {minioSave} = require('../config/minio-serve');
+const axios = require('axios');
 
 exports.listarNoticias = async (req, res) => {
     res.json(await dfmodel.listarAllNoticias());
 }
 
 exports.obtenerImagen = async (req, res) => {
-    const result = await dfmodel.obtenerImagen(Number(req.params.cod))
-    if (result.data.length) {
+
+    /**if (result.data.length) {
         const image = result.data[0];
         res.writeHead(200, {
             'Content-Type': image.extencion,
@@ -16,7 +17,28 @@ exports.obtenerImagen = async (req, res) => {
         res.end(image.buffer);
     } else {
         res.status(404).send('Imagen no encontrada.');
+    } */
+
+    try{
+        const result = await dfmodel.obtenerImagen(Number(req.params.cod))
+        if(result.data.length){
+            const image = result.data[0];
+            const response = await axios.get(image.ubicacion, {responseType: 'stream'});
+
+            res.writeHead(200, {
+                'Content-Type': image.extencion,
+                'Content-Length': response.headers['content-length']
+            });
+
+            response.data.pipe(res);
+        } else {
+            res.status(404).send('Imagen no encontrada.');
+        }
+    } catch (error) {
+        console.error('Error al obtener la imagen:', error.message);
+        res.status(500).send('Error al obtener la imagen');
     }
+
 }
 
 exports.insertNews = async (req, res) => {

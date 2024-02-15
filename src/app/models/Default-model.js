@@ -2,7 +2,7 @@ const pgpool = require('../config/PgConnection-config');
 
 
 exports.listarAllNoticias = async () =>{
-    let sql = 'SELECT cod_news, title, description, content, ne.created_at , ubicacion as url_img '
+    let sql = 'SELECT cod_news, title, description, content, CAST(ne.created_at AS TIMESTAMP) as created_at , ubicacion as url_img '
     sql += `FROM news ne `
     sql += `LEFT JOIN adjuntos ad ON ad.relacion = ne.cod_news`;
     return await pgpool.pgResult(sql);
