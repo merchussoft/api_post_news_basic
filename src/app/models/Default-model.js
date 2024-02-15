@@ -22,7 +22,7 @@ exports.insertNews = async (data) =>{
 }
 
 exports.detailPost = async (cod_adjunto) =>{
-    let sql = 'SELECT cod_news, title, description, content, ne.created_at , ubicacion as url_img '
+    let sql = 'SELECT cod_news, title, description, content, ne.created_at , ubicacion_ssl as url_img '
     sql += 'FROM news ne '
     sql += 'LEFT JOIN adjuntos ad ON ad.relacion = ne.cod_news ';
     sql += 'WHERE 1=1 AND ne.cod_news = $1';
