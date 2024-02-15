@@ -1,5 +1,4 @@
 const dfmodel = require('../models/Default-model');
-const cfg = require('../config/config');
 const {minioSave} = require('../config/minio-serve');
 
 exports.listarNoticias = async (req, res) => {
@@ -21,13 +20,21 @@ exports.obtenerImagen = async (req, res) => {
 }
 
 exports.insertNews = async (req, res) => {
-    const {data, code} = await dfmodel.insertNews(req.body);
+    const body_data = {
+        title: req.body.title,
+        description: req.body.description,
+        content: req.body.content,
+        cod_seccion: 1
+    }
+    const {data, code} = await dfmodel.insertNews(body_data);
     if (code === 200) {
+        console.log('aqui llegamos ')
         const data_minio = await minioSave(req.file);
 
         if (data_minio.code === 200) {
             const data_insert = data_minio.data;
-            data_insert.relacion = data;
+            data_insert.relacion = data.cod_news;
+            console.log(data_insert);
             await dfmodel.insertAdjuntos(data_insert)
             res.status(data_minio.code).json({message: 'data guardada existosamente'});
         } else {
@@ -42,6 +49,7 @@ exports.insertNews = async (req, res) => {
 
 exports.detailPost = async (req, res) => {
     const {data, code} = await dfmodel.detailPost(Number(req.params.cod_post));
+    console.log(data);
     res.status(code).json(data);
 }
 

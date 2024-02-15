@@ -1,35 +1,34 @@
-const db = require('../config/DataBase-config');
-const cfg = require ('../config/config');
+const pgpool = require('../config/PgConnection-config');
 
 
 exports.listarAllNoticias = async () =>{
-    let sql = 'SELECT cod_news, title, description, content, DATE_FORMAT(ne.created_at, "%e %M, %Y") as created_at , ubicacion as url_img '
-    sql += `FROM ${cfg.getEnvironment('DB_CLIENT')}.news ne `
-    sql += `LEFT JOIN ${cfg.getEnvironment('DB_CLIENT')}.adjuntos ad ON ad.relacion = ne.cod_news`;
-    return await db.resultPromise(sql)
+    let sql = 'SELECT cod_news, title, description, content, ne.created_at , ubicacion as url_img '
+    sql += `FROM news ne `
+    sql += `LEFT JOIN adjuntos ad ON ad.relacion = ne.cod_news`;
+    return await pgpool.pgResult(sql);
 }
 
 
 exports.obtenerImagen = async (cod_adjunto) =>{
-    return await db.obtieneDatos({
-        "table": `${cfg.getEnvironment('DB_CLIENT')}.adjuntos`,
+    return await pgpool.obtieneDatos({
+        "table": `adjuntos`,
         "campo": 'relacion',
         "valor": cod_adjunto
     })
 }
 
 exports.insertNews = async (data) =>{
-    return await db.insertTable(`${cfg.getEnvironment('DB_CLIENT')}.news`, data)
+    return await pgpool.insertTable(`news`, data, 'cod_news')
 }
 
 exports.detailPost = async (cod_adjunto) =>{
-    let sql = 'SELECT cod_news, title, description, content, DATE_FORMAT(ne.created_at, "%e %M, %Y") as created_at , ubicacion as url_img '
-    sql += `FROM ${cfg.getEnvironment('DB_CLIENT')}.news ne `
-    sql += `LEFT JOIN ${cfg.getEnvironment('DB_CLIENT')}.adjuntos ad ON ad.relacion = ne.cod_news `;
-    sql += `WHERE 1=1 AND ne.cod_news = ?`;
-    return await db.resultPromise(sql, [cod_adjunto])
+    let sql = 'SELECT cod_news, title, description, content, ne.created_at , ubicacion as url_img '
+    sql += 'FROM news ne '
+    sql += 'LEFT JOIN adjuntos ad ON ad.relacion = ne.cod_news ';
+    sql += 'WHERE 1=1 AND ne.cod_news = $1';
+    return await pgpool.pgResult(sql, [cod_adjunto])
 }
 
 exports.insertAdjuntos = async (data = {})  => {
-    return await db.insertTable(`${cfg.getEnvironment('DB_CLIENT')}.adjuntos`, data)
+    return await pgpool.insertTable(`adjuntos`, data);
 }

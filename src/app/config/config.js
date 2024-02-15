@@ -19,15 +19,13 @@ function createPathEnv(path){
     return '.' + arr_env.join('.');
 }
 
-function MysqlConfig(){
+function PgConfig(){
     return {
-        host: getEnvironment('DB_HOST'),
-        user: getEnvironment('DB_USER'),
-        password: getEnvironment('DB_PASS'),
-        database: getEnvironment('DB_NAME'),
-        port: getNumberEnv('DB_PORT'),
-        timezone: 'Europe/Madrid',
-        charset: 'utf8mb4'
+        host: getEnvironment('DB_HOST_POSTGRES'),
+        user: getEnvironment('DB_USER_POSTGRES'),
+        password: getEnvironment('DB_PASS_POSTGRES'),
+        database: getEnvironment('DB_NAME_POSTGRES'),
+        port: getNumberEnv('DB_PORT_POSTGRES'),
     }
 }
 
@@ -42,7 +40,7 @@ module.exports = {
     getNumberEnv,
     nodeEnv,
     createPathEnv,
-    MysqlConfig,
-    validarTipoDato
+    validarTipoDato,
+    PgConfig
 }
 
