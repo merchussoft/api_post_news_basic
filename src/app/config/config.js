@@ -34,6 +34,12 @@ function validarTipoDato(valor) {
     return (typeof valor === 'number') ? Number(valor) : valor;
 }
 
+function UrlHost(req) {
+    const protocolo = req.protocol;
+    const host = req.get('host');
+    return `${protocolo}://${host}/api/news`
+}
+
 
 module.exports = {
     getEnvironment,
@@ -41,6 +47,7 @@ module.exports = {
     nodeEnv,
     createPathEnv,
     validarTipoDato,
-    PgConfig
+    PgConfig,
+    UrlHost
 }
 

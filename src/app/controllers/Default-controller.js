@@ -1,24 +1,13 @@
 const dfmodel = require('../models/Default-model');
 const {minioSave} = require('../config/minio-serve');
 const axios = require('axios');
+const cfg = require('../config/config');
 
 exports.listarNoticias = async (req, res) => {
     res.json(await dfmodel.listarAllNoticias());
 }
 
 exports.obtenerImagen = async (req, res) => {
-
-    /**if (result.data.length) {
-        const image = result.data[0];
-        res.writeHead(200, {
-            'Content-Type': image.extencion,
-            'Content-Length': image.tamano,
-        });
-        res.end(image.buffer);
-    } else {
-        res.status(404).send('Imagen no encontrada.');
-    } */
-
     try{
         const result = await dfmodel.obtenerImagen(Number(req.params.cod))
         if(result.data.length){
@@ -29,7 +18,6 @@ exports.obtenerImagen = async (req, res) => {
                 'Content-Type': image.extencion,
                 'Content-Length': response.headers['content-length']
             });
-
             response.data.pipe(res);
         } else {
             res.status(404).send('Imagen no encontrada.');
@@ -50,13 +38,12 @@ exports.insertNews = async (req, res) => {
     }
     const {data, code} = await dfmodel.insertNews(body_data);
     if (code === 200) {
-        console.log('aqui llegamos ')
         const data_minio = await minioSave(req.file);
 
         if (data_minio.code === 200) {
             const data_insert = data_minio.data;
             data_insert.relacion = data.cod_news;
-            console.log(data_insert);
+            data_insert.ubicacion_ssl = `${cfg.UrlHost(req)}/obtener_imagen/${data.cod_news}`;
             await dfmodel.insertAdjuntos(data_insert)
             res.status(data_minio.code).json({message: 'data guardada existosamente'});
         } else {
