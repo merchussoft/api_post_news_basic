@@ -8,9 +8,9 @@ exports.listarNoticias = async (req, res) => {
 }
 
 exports.obtenerImagen = async (req, res) => {
-    try{
+    try {
         const result = await dfmodel.obtenerImagen(Number(req.params.cod))
-        if(result.data.length){
+        if (result.data.length) {
             const image = result.data[0];
             const response = await axios.get(image.ubicacion, {responseType: 'stream'});
 
@@ -39,7 +39,6 @@ exports.insertNews = async (req, res) => {
     const {data, code} = await dfmodel.insertNews(body_data);
     if (code === 200) {
         const data_minio = await minioSave(req.file);
-
         if (data_minio.code === 200) {
             const data_insert = data_minio.data;
             data_insert.relacion = data.cod_news;
@@ -58,7 +57,6 @@ exports.insertNews = async (req, res) => {
 
 exports.detailPost = async (req, res) => {
     const {data, code} = await dfmodel.detailPost(Number(req.params.cod_post));
-    console.log(data);
     res.status(code).json(data);
 }
 
