@@ -1,5 +1,5 @@
 const Minio = require('minio');
-const cfg = require('./config');
+const cfg = require('../config/config');
 
 const minioClient = new Minio.Client({
     endPoint: cfg.getEnvironment('ENDPOINT'),

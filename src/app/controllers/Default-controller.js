@@ -1,5 +1,5 @@
 const dfmodel = require('../models/Default-model');
-const {minioSave} = require('../config/minio-serve');
+const {minioSave} = require('../helpers/updateS3Minio');
 const axios = require('axios');
 const cfg = require('../config/config');
 
@@ -48,7 +48,6 @@ exports.insertNews = async (req, res) => {
         } else {
             res.status(code).json({message: 'data guardada existosamente sin una imagen'});
         }
-
     } else {
         res.status(code).json({message: 'Validar la data del formulario'});
     }

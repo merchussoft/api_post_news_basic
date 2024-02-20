@@ -1,6 +1,6 @@
 const route = require('express').Router();
 const dfci = require('../controllers/Default-controller');
-const {upload} = require('../config/multer-config');
+const {upload} = require('../helpers/multer-upload-file');
 
 route.get('/', dfci.listarNoticias);
 route.get('/obtener_imagen/:cod', dfci.obtenerImagen);
