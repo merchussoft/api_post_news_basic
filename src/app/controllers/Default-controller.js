@@ -2,7 +2,7 @@ const dfmodel = require('../models/Default-model');
 const {minioSave} = require('../helpers/updateS3Minio');
 const axios = require('axios');
 const cfg = require('../config/config');
-const {sendMessageTelegramApi} = require('../helpers/telegramSendMessage-helper');
+const {sendMessageTelegramApiPhoto, sendMessageTelegramApiText} = require('../helpers/telegramSendMessage-helper');
 
 exports.listarNoticias = async (req, res) => {
     res.json(await dfmodel.listarAllNoticias());
@@ -45,9 +45,10 @@ exports.insertNews = async (req, res) => {
             data_insert.relacion = data.cod_news;
             data_insert.ubicacion_ssl = `${cfg.UrlHost(req)}/obtener_imagen/${data.cod_news}`;
             await dfmodel.insertAdjuntos(data_insert)
-            sendMessageTelegramApi({title: body_data.title, url_image: data_insert.ubicacion_ssl, leermas: process.env.URL_LEERMAS+`/${data.cod_news}`});
+            sendMessageTelegramApiPhoto({title: body_data.title, url_image: data_insert.ubicacion_ssl, leermas: process.env.URL_LEERMAS+`/${data.cod_news}`});
             res.status(data_minio.code).json({message: 'data guardada existosamente'});
         } else {
+            sendMessageTelegramApiText({title: body_data.title, leermas: process.env.URL_LEERMAS+`/${data.cod_news}`});
             res.status(code).json({message: 'data guardada existosamente sin una imagen'});
         }
     } else {

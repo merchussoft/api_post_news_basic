@@ -1,8 +1,6 @@
 const axios = require('axios');
-const FormData = require('form-data');
-const fs = require('fs');
 
-const sendMessageTelegramApi = (data = {}) => {
+const sendMessageTelegramApiPhoto = (data = {}) => {
     // Enviar la solicitud POST a la API de Telegram
     axios.post(`${process.env.URL_API_TELEGRAM}bot${process.env.BOT_TOKEN_TELEGRAM}/sendPhoto`, {
         chat_id: process.env.CHAT_ID_BOT_TELEGRAM,
@@ -16,6 +14,20 @@ const sendMessageTelegramApi = (data = {}) => {
 }
 
 
+const sendMessageTelegramApiText = (data = {}) => {
+    // Enviar la solicitud POST a la API de Telegram
+    axios.post(`${process.env.URL_API_TELEGRAM}bot${process.env.BOT_TOKEN_TELEGRAM}/sendMessage`, {
+        chat_id: process.env.CHAT_ID_BOT_TELEGRAM,
+        text: `<b>${data.title}</b> \n <a href='${data.leermas}'>Leer más >></a>`,
+        parse_mode: 'HTML'
+    })
+        .catch((error) => {
+            console.error('Error al enviar el mensaje y la imagen:', error);
+        });
+}
+
+
 module.exports = {
-    sendMessageTelegramApi
+    sendMessageTelegramApiPhoto,
+    sendMessageTelegramApiText
 }
